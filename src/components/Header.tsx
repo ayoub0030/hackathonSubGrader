@@ -37,6 +37,12 @@ export function Header() {
                 </a>
               </>
             ) : null}
+            <a href="/analytics" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Analytics
+            </a>
+            <a href="/settings" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Settings
+            </a>
           </nav>
 
           <div className="flex items-center gap-2">
