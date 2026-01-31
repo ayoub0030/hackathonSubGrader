@@ -11,6 +11,8 @@ import Analytics from "./pages/Analytics";
 import Settings from "./pages/Settings";
 import Help from "./pages/Help";
 import Feedback from "./pages/Feedback";
+import Profile from "./pages/Profile";
+import Collaborative from "./pages/Collaborative";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +32,8 @@ const App = () => (
               <Route path="/settings" element={<Settings />} />
               <Route path="/help" element={<Help />} />
               <Route path="/feedback" element={<Feedback />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/collaborative" element={<Collaborative />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

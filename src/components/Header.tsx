@@ -43,6 +43,12 @@ export function Header() {
             <a href="/settings" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Settings
             </a>
+            <a href="/profile" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Profile
+            </a>
+            <a href="/collaborative" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Collaborate
+            </a>
             <a href="/help" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Help
             </a>
