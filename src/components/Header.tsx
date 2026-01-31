@@ -1,5 +1,6 @@
 import { GraduationCap, FileText, Sparkles, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -19,36 +20,39 @@ export function Header() {
           </span>
         </a>
 
-        <nav className="hidden md:flex items-center gap-6">
-          {location.pathname === "/" ? (
-            <>
-              <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                Features
-              </a>
-              <a href="#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                How it works
-              </a>
-              <a href="#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                Pricing
-              </a>
-            </>
-          ) : null}
-        </nav>
+        <div className="flex items-center gap-3">
+          <nav className="hidden md:flex items-center gap-6">
+            {location.pathname === "/" ? (
+              <>
+                <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  Features
+                </a>
+                <a href="#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  How it works
+                </a>
+                <a href="#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  Pricing
+                </a>
+              </>
+            ) : null}
+          </nav>
 
-        <div className="hidden md:flex items-center gap-3">
-          {location.pathname === "/" ? (
-            <a href="/class-exam">
-              <Button size="sm" variant="outline">
-                Class grading
-              </Button>
-            </a>
-          ) : (
-            <a href="/">
-              <Button size="sm" variant="outline">
-                Simple grading
-              </Button>
-            </a>
-          )}
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            {location.pathname === "/" ? (
+              <a href="/class-exam">
+                <Button size="sm" variant="outline">
+                  Class grading
+                </Button>
+              </a>
+            ) : (
+              <a href="/">
+                <Button size="sm" variant="outline">
+                  Simple grading
+                </Button>
+              </a>
+            )}
+          </div>
         </div>
 
         <Button
@@ -78,6 +82,7 @@ export function Header() {
               </>
             ) : null}
             <div className="flex gap-2 pt-3 border-t border-border">
+              <ThemeToggle />
               {location.pathname === "/" ? (
                 <a href="/class-exam" className="flex-1">
                   <Button size="sm" className="w-full">
