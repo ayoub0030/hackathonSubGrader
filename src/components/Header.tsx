@@ -23,13 +23,13 @@ export function Header() {
           {location.pathname === "/" ? (
             <>
               <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                Fonctionnalités
+                Features
               </a>
               <a href="#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                Comment ça marche
+                How it works
               </a>
               <a href="#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                Tarifs
+                Pricing
               </a>
             </>
           ) : null}
@@ -39,13 +39,13 @@ export function Header() {
           {location.pathname === "/" ? (
             <a href="/class-exam">
               <Button size="sm" variant="outline">
-                Correction de classe
+                Class grading
               </Button>
             </a>
           ) : (
             <a href="/">
               <Button size="sm" variant="outline">
-                Correction simple
+                Simple grading
               </Button>
             </a>
           )}
@@ -67,13 +67,13 @@ export function Header() {
             {location.pathname === "/" ? (
               <>
                 <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors py-2">
-                  Fonctionnalités
+                  Features
                 </a>
                 <a href="#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors py-2">
-                  Comment ça marche
+                  How it works
                 </a>
                 <a href="#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors py-2">
-                  Tarifs
+                  Pricing
                 </a>
               </>
             ) : null}
@@ -81,13 +81,13 @@ export function Header() {
               {location.pathname === "/" ? (
                 <a href="/class-exam" className="flex-1">
                   <Button size="sm" className="w-full">
-                    Correction de classe
+                    Class grading
                   </Button>
                 </a>
               ) : (
                 <a href="/" className="flex-1">
                   <Button size="sm" className="w-full">
-                    Correction simple
+                    Simple grading
                   </Button>
                 </a>
               )}

@@ -3,33 +3,33 @@ import { Zap, BookOpen, MessageSquareText, BarChart3, Shield, Users } from "luci
 const features = [
   {
     icon: Zap,
-    title: "Ultra rapide",
-    description: "Corrigez des dissertations en moins de 30 secondes grâce à notre moteur IA avancé.",
+    title: "Ultra-fast",
+    description: "Grade essays in under 30 seconds with our advanced AI engine.",
   },
   {
     icon: BookOpen,
-    title: "Aligné sur la grille",
-    description: "Des grilles personnalisables garantissent une correction cohérente et équitable à chaque fois.",
+    title: "Rubric-aligned",
+    description: "Customizable rubrics ensure consistent and fair grading every time.",
   },
   {
     icon: MessageSquareText,
-    title: "Retours actionnables",
-    description: "Les élèves reçoivent des retours précis et encourageants, réellement utiles.",
+    title: "Actionable feedback",
+    description: "Students receive precise, encouraging feedback that's genuinely useful.",
   },
   {
     icon: BarChart3,
-    title: "Analyses détaillées",
-    description: "Suivez la progression dans le temps grâce à des indicateurs de performance complets.",
+    title: "Detailed analytics",
+    description: "Track progress over time with comprehensive performance metrics.",
   },
   {
     icon: Shield,
-    title: "Sans biais",
-    description: "Notre IA évalue la qualité de l'écriture, pas l'identité ni les opinions de l'élève.",
+    title: "Unbiased",
+    description: "Our AI evaluates writing quality, not student identity or opinions.",
   },
   {
     icon: Users,
-    title: "Conçu pour les enseignants",
-    description: "Conçu par des enseignants, pour des enseignants. Gagnez du temps sans sacrifier la qualité.",
+    title: "Built for teachers",
+    description: "Designed by teachers, for teachers. Save time without sacrificing quality.",
   },
 ];
 
@@ -39,10 +39,10 @@ export function FeaturesSection() {
       <div className="container">
         <div className="mx-auto max-w-2xl text-center mb-12">
           <h2 className="mb-4 font-display text-3xl font-bold tracking-tight sm:text-4xl">
-            Tout ce qu'il vous faut pour corriger plus intelligemment
+            Everything you need to grade smarter
           </h2>
           <p className="text-muted-foreground text-lg">
-            Des fonctionnalités puissantes pour transformer votre manière de corriger.
+            Powerful features to transform your grading workflow.
           </p>
         </div>
 

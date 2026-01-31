@@ -31,16 +31,16 @@ export function EssaySubmission({ onSubmit, isLoading }: EssaySubmissionProps) {
     if (file) {
       if (!file.type.startsWith('image/')) {
         toast({
-          title: "Type de fichier invalide",
-          description: "Veuillez importer un fichier image (JPG, PNG, etc.)",
+          title: "Invalid file type",
+          description: "Please upload an image file (JPG, PNG, etc.)",
           variant: "destructive",
         });
         return;
       }
       if (file.size > 10 * 1024 * 1024) {
         toast({
-          title: "Fichier trop volumineux",
-          description: "Veuillez importer une image de moins de 10 Mo",
+          title: "File too large",
+          description: "Please upload an image smaller than 10MB",
           variant: "destructive",
         });
         return;
@@ -82,10 +82,10 @@ export function EssaySubmission({ onSubmit, isLoading }: EssaySubmissionProps) {
           {/* Section Header */}
           <div className="mb-10 text-center">
             <h2 className="mb-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
-              Soumettre une dissertation à corriger
+              Submit an essay for grading
             </h2>
             <p className="text-muted-foreground">
-              Collez ou importez une dissertation, sélectionnez une grille et obtenez un retour instantané.
+              Paste or upload an essay, select a rubric, and get instant feedback.
             </p>
           </div>
 
@@ -95,10 +95,10 @@ export function EssaySubmission({ onSubmit, isLoading }: EssaySubmissionProps) {
               {/* Student Info Row */}
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="studentName">Nom de l'élève (optionnel)</Label>
+                  <Label htmlFor="studentName">Student name (optional)</Label>
                   <Input
                     id="studentName"
-                    placeholder="ex. : Jean Dupont"
+                    placeholder="e.g., John Smith"
                     value={studentName}
                     onChange={(e) => setStudentName(e.target.value)}
                   />
@@ -111,14 +111,14 @@ export function EssaySubmission({ onSubmit, isLoading }: EssaySubmissionProps) {
               {/* Essay Input */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="essay">Contenu de la dissertation {!imageFile && '*'}</Label>
+                  <Label htmlFor="essay">Essay content {!imageFile && '*'}</Label>
                   <span className={`text-xs ${wordCount > 0 ? 'text-muted-foreground' : 'text-muted-foreground/50'}`}>
-                    {wordCount} mots
+                    {wordCount} words
                   </span>
                 </div>
                 <Textarea
                   id="essay"
-                  placeholder="Collez ici la dissertation de l'élève..."
+                  placeholder="Paste the student's essay here..."
                   value={essay}
                   onChange={(e) => setEssay(e.target.value)}
                   className="min-h-[200px] resize-y text-sm leading-relaxed"
@@ -128,13 +128,13 @@ export function EssaySubmission({ onSubmit, isLoading }: EssaySubmissionProps) {
 
               {/* Image Upload */}
               <div className="space-y-2">
-                <Label>Ou importer une image de la dissertation</Label>
+                <Label>Or upload an essay image</Label>
                 <div className="flex flex-col gap-3">
                   {imagePreview ? (
                     <div className="relative inline-block">
                       <img 
                         src={imagePreview} 
-                        alt="Aperçu de la dissertation" 
+                        alt="Essay preview" 
                         className="max-h-[200px] rounded-lg border border-border object-contain"
                       />
                       <button
@@ -154,8 +154,8 @@ export function EssaySubmission({ onSubmit, isLoading }: EssaySubmissionProps) {
                         <Image className="h-5 w-5 text-muted-foreground" />
                       </div>
                       <div className="text-center">
-                        <p className="text-sm font-medium">Cliquer pour importer une image</p>
-                        <p className="text-xs text-muted-foreground">JPG, PNG jusqu'à 10 Mo</p>
+                        <p className="text-sm font-medium">Click to upload image</p>
+                        <p className="text-xs text-muted-foreground">JPG, PNG up to 10MB</p>
                       </div>
                     </div>
                   )}
@@ -180,11 +180,11 @@ export function EssaySubmission({ onSubmit, isLoading }: EssaySubmissionProps) {
                   {isLoading ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      Analyse de la dissertation...
+                      Analyzing essay...
                     </>
                   ) : (
                     <>
-                      Corriger cette dissertation
+                      Grade this essay
                     </>
                   )}
                 </Button>

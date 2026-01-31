@@ -61,26 +61,26 @@ const Index = () => {
         setExtractedQuestions(questions);
         setWorkflowStep("extractor");
         toast({
-          title: "Questions extraites avec succès",
-          description: `${questions.length} questions détectées. Veuillez vérifier et entrer les scores.`,
+          title: "Questions extracted successfully",
+          description: `${questions.length} questions detected. Please review and enter scores.`,
         });
         window.scrollTo({ top: 0, behavior: "smooth" });
       } else {
         // If only text essay, grade directly (old flow)
         toast({
-          title: "Erreur",
-          description: "Veuillez télécharger une image d'examen",
+          title: "Error",
+          description: "Please upload an exam image",
           variant: "destructive",
         });
       }
     } catch (error) {
       console.error("Extraction error:", error);
       toast({
-        title: "Erreur lors de l'extraction",
+        title: "Extraction error",
         description:
           error instanceof Error
             ? error.message
-            : "Impossible d'extraire les questions",
+            : "Unable to extract questions",
         variant: "destructive",
       });
     } finally {
@@ -108,18 +108,18 @@ const Index = () => {
       setGradingResult(result);
       setWorkflowStep("results");
       toast({
-        title: "Examen corrigé avec succès",
-        description: `Score global : ${result.overall_assessment.total_score}/${result.overall_assessment.total_max_score} (${result.overall_assessment.letter_grade})`,
+        title: "Exam graded successfully",
+        description: `Overall score: ${result.overall_assessment.total_score}/${result.overall_assessment.total_max_score} (${result.overall_assessment.letter_grade})`,
       });
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (error) {
       console.error("Grading error:", error);
       toast({
-        title: "Erreur lors de la correction",
+        title: "Grading error",
         description:
           error instanceof Error
             ? error.message
-            : "Impossible de corriger l'examen",
+            : "Unable to grade exam",
         variant: "destructive",
       });
     } finally {

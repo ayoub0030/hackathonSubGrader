@@ -15,8 +15,8 @@ export function Footer() {
 
           {/* Links */}
           <nav className="flex items-center gap-6 text-sm text-muted-foreground">
-            <a href="#" className="hover:text-foreground transition-colors">Confidentialité</a>
-            <a href="#" className="hover:text-foreground transition-colors">Conditions</a>
+            <a href="#" className="hover:text-foreground transition-colors">Privacy</a>
+            <a href="#" className="hover:text-foreground transition-colors">Terms</a>
             <a href="#" className="hover:text-foreground transition-colors">Contact</a>
           </nav>
 
@@ -38,7 +38,7 @@ export function Footer() {
         </div>
 
         <div className="mt-8 pt-8 border-t border-border text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} CoTeacher. Correction de dissertations assistée par IA pour les enseignants.
+          © {new Date().getFullYear()} CoTeacher. AI-powered essay grading for teachers.
         </div>
       </div>
     </footer>
