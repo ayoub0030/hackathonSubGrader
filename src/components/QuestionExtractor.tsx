@@ -90,11 +90,11 @@ export function QuestionExtractor({
           {/* Header */}
           <div className="mb-10">
             <h2 className="mb-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
-              Questions extraites de l'examen
+              Questions extracted from exam
             </h2>
             <p className="text-muted-foreground">
-              Vérifiez les questions extraites et entrez le score maximum pour
-              chaque question.
+              Review the extracted questions and enter the maximum score for
+              each question.
             </p>
           </div>
 
@@ -104,7 +104,7 @@ export function QuestionExtractor({
               <Card className="p-6">
                 <div className="flex items-center gap-3 text-amber-600">
                   <AlertCircle className="h-5 w-5" />
-                  <p>Aucune question détectée. Veuillez vérifier l'image.</p>
+                  <p>No questions detected. Please check the image.</p>
                 </div>
               </Card>
             ) : (
@@ -129,7 +129,7 @@ export function QuestionExtractor({
                             className="gap-2"
                           >
                             <Check className="h-4 w-4" />
-                            Enregistrer
+                            Save
                           </Button>
                         </div>
                       ) : (
@@ -153,7 +153,7 @@ export function QuestionExtractor({
                     {/* Score Input */}
                     <div>
                       <Label htmlFor={`score-${question.id}`} className="text-sm">
-                        Score maximum (points)
+                        Maximum score (points)
                       </Label>
                       <Input
                         id={`score-${question.id}`}
@@ -164,7 +164,7 @@ export function QuestionExtractor({
                         onChange={(e) =>
                           handleScoreChange(question.id, e.target.value)
                         }
-                        placeholder="ex. 10"
+                        placeholder="e.g. 10"
                         className="mt-1"
                       />
                     </div>
@@ -172,7 +172,7 @@ export function QuestionExtractor({
                     {/* Rubric Input */}
                     <div>
                       <Label htmlFor={`rubric-${question.id}`} className="text-sm">
-                        Grille d'évaluation (comment évaluer cette question)
+                        Grading rubric (how to evaluate this question)
                       </Label>
                       <Textarea
                         id={`rubric-${question.id}`}
@@ -180,7 +180,7 @@ export function QuestionExtractor({
                         onChange={(e) =>
                           handleRubricChange(question.id, e.target.value)
                         }
-                        placeholder="ex. Évaluer sur la clarté, la précision, la complétude de la réponse..."
+                        placeholder="e.g. Evaluate on clarity, precision, completeness of answer..."
                         className="mt-1 min-h-[80px]"
                       />
                     </div>
@@ -193,7 +193,7 @@ export function QuestionExtractor({
           {/* Actions */}
           <div className="mt-8 flex gap-3">
             <Button variant="outline" onClick={onBack}>
-              Retour
+              Back
             </Button>
             <Button
               onClick={handleSubmit}
@@ -203,10 +203,10 @@ export function QuestionExtractor({
               {isLoading ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Correction en cours...
+                  Grading in progress...
                 </>
               ) : (
-                `Corriger (${editedQuestions.length} questions)`
+                `Grade (${editedQuestions.length} questions)`
               )}
             </Button>
           </div>

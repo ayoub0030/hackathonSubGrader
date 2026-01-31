@@ -29,16 +29,16 @@ export function ExamStructureSetup({ onSetupComplete }: ExamStructureSetupProps)
     if (file) {
       if (!file.type.startsWith("image/")) {
         toast({
-          title: "Type de fichier invalide",
-          description: "Veuillez importer un fichier image (JPG, PNG, etc.)",
+          title: "Invalid file type",
+          description: "Please upload an image file (JPG, PNG, etc.)",
           variant: "destructive",
         });
         return;
       }
       if (file.size > 10 * 1024 * 1024) {
         toast({
-          title: "Fichier trop volumineux",
-          description: "Veuillez importer une image de moins de 10 Mo",
+          title: "File too large",
+          description: "Please upload an image smaller than 10MB",
           variant: "destructive",
         });
         return;
@@ -55,8 +55,8 @@ export function ExamStructureSetup({ onSetupComplete }: ExamStructureSetupProps)
   const handleExtractQuestions = async () => {
     if (!templateFile) {
       toast({
-        title: "Erreur",
-        description: "Veuillez télécharger une image d'examen",
+        title: "Error",
+        description: "Please upload an exam image",
         variant: "destructive",
       });
       return;
@@ -77,17 +77,17 @@ export function ExamStructureSetup({ onSetupComplete }: ExamStructureSetupProps)
       setStep("configure");
 
       toast({
-        title: "Questions extraites avec succès",
-        description: `${questions.length} questions détectées. Veuillez vérifier et configurer les scores.`,
+        title: "Questions extracted successfully",
+        description: `${questions.length} questions detected. Please review and configure scores.`,
       });
     } catch (error) {
       console.error("Extraction error:", error);
       toast({
-        title: "Erreur lors de l'extraction",
+        title: "Extraction error",
         description:
           error instanceof Error
             ? error.message
-            : "Impossible d'extraire les questions",
+            : "Unable to extract questions",
         variant: "destructive",
       });
     } finally {
@@ -98,8 +98,8 @@ export function ExamStructureSetup({ onSetupComplete }: ExamStructureSetupProps)
   const handleConfigureComplete = (questionsWithScores: ExtractedQuestion[]) => {
     if (!gradeLevel.trim()) {
       toast({
-        title: "Erreur",
-        description: "Veuillez sélectionner un niveau scolaire",
+        title: "Error",
+        description: "Please select a grade level",
         variant: "destructive",
       });
       return;
@@ -135,10 +135,10 @@ export function ExamStructureSetup({ onSetupComplete }: ExamStructureSetupProps)
         <div className="mx-auto max-w-3xl">
           <div className="mb-12">
             <h1 className="font-display text-4xl font-bold mb-4">
-              Définir la structure d'examen
+              Define exam structure
             </h1>
             <p className="text-lg text-muted-foreground">
-              Téléchargez un modèle d'examen pour extraire les questions et configurer les scores.
+              Upload an exam template to extract questions and configure scores.
             </p>
           </div>
 
@@ -147,10 +147,10 @@ export function ExamStructureSetup({ onSetupComplete }: ExamStructureSetupProps)
               <div className="space-y-6">
                 <div>
                   <Label className="text-base font-semibold mb-4 block">
-                    Niveau scolaire
+                    Grade level
                   </Label>
                   <Input
-                    placeholder="Ex: 6ème, 3ème, Terminale"
+                    placeholder="e.g., 6th grade, 9th grade, 12th grade"
                     value={gradeLevel}
                     onChange={(e) => setGradeLevel(e.target.value)}
                     className="mb-4"
@@ -159,7 +159,7 @@ export function ExamStructureSetup({ onSetupComplete }: ExamStructureSetupProps)
 
                 <div>
                   <Label className="text-base font-semibold mb-4 block">
-                    Télécharger le modèle d'examen
+                    Upload exam template
                   </Label>
 
                   {!templatePreview ? (
@@ -169,10 +169,10 @@ export function ExamStructureSetup({ onSetupComplete }: ExamStructureSetupProps)
                     >
                       <Image className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
                       <p className="text-sm font-medium mb-2">
-                        Cliquez pour télécharger une image
+                        Click to upload image
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        JPG, PNG ou PDF (max 10 Mo)
+                        JPG, PNG or PDF (max 10MB)
                       </p>
                       <input
                         ref={fileInputRef}
@@ -205,7 +205,7 @@ export function ExamStructureSetup({ onSetupComplete }: ExamStructureSetupProps)
                         onClick={() => fileInputRef.current?.click()}
                       >
                         <Upload className="h-4 w-4 mr-2" />
-                        Changer l'image
+                        Change image
                       </Button>
                       <input
                         ref={fileInputRef}
@@ -227,10 +227,10 @@ export function ExamStructureSetup({ onSetupComplete }: ExamStructureSetupProps)
                   {isLoading ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      Extraction en cours...
+                      Extracting questions...
                     </>
                   ) : (
-                    "Extraire les questions"
+                    "Extract questions"
                   )}
                 </Button>
               </div>

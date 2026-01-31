@@ -8,7 +8,7 @@ interface HeroSectionProps {
 export function HeroSection({ onStartGrading }: HeroSectionProps) {
   return (
     <section className="relative overflow-hidden py-20 md:py-32">
-      {/* Background gradient /}
+      {/* Background gradient */}
       <div 
         className="absolute inset-0 -z-10"
         style={{ background: 'var(--gradient-hero)' }}

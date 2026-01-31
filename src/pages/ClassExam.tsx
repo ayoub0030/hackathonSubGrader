@@ -29,8 +29,8 @@ const ClassExam = () => {
     setGradeLevel(level);
     setStep("upload");
     toast({
-      title: "Structure d'examen définie",
-      description: `${questions.length} questions configurées. Veuillez télécharger les examens des élèves.`,
+      title: "Exam structure defined",
+      description: `${questions.length} questions configured. Please upload student exams.`,
     });
   };
 
@@ -42,8 +42,8 @@ const ClassExam = () => {
   const handleStartGrading = async () => {
     if (examFiles.length === 0) {
       toast({
-        title: "Erreur",
-        description: "Veuillez télécharger au moins un examen",
+        title: "Error",
+        description: "Please upload at least one exam",
         variant: "destructive",
       });
       return;
@@ -81,19 +81,19 @@ const ClassExam = () => {
 
       const successCount = results.filter((r) => r.status === "success").length;
       toast({
-        title: "Correction terminée",
-        description: `${successCount}/${results.length} examens corrigés avec succès`,
+        title: "Grading completed",
+        description: `${successCount}/${results.length} exams graded successfully`,
       });
 
       console.log(`[BATCH] Batch grading completed. Results:`, results);
     } catch (error) {
       console.error("[BATCH] Error during batch grading:", error);
       toast({
-        title: "Erreur lors de la correction",
+        title: "Grading error",
         description:
           error instanceof Error
             ? error.message
-            : "Impossible de corriger les examens",
+            : "Unable to grade exams",
         variant: "destructive",
       });
     } finally {

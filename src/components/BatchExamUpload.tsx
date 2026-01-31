@@ -39,8 +39,8 @@ export function BatchExamUpload({
   const handleAddStudent = () => {
     if (students.length >= 10) {
       toast({
-        title: "Limite atteinte",
-        description: "Vous pouvez ajouter un maximum de 10 élèves",
+        title: "Limit reached",
+        description: "You can add a maximum of 10 students",
         variant: "destructive",
       });
       return;
@@ -52,8 +52,8 @@ export function BatchExamUpload({
   const handleRemoveStudent = (id: string) => {
     if (students.length === 1) {
       toast({
-        title: "Erreur",
-        description: "Vous devez avoir au moins un élève",
+        title: "Error",
+        description: "You must have at least one student",
         variant: "destructive",
       });
       return;
@@ -70,16 +70,16 @@ export function BatchExamUpload({
     if (file) {
       if (!file.type.startsWith("image/")) {
         toast({
-          title: "Type de fichier invalide",
-          description: "Veuillez importer un fichier image (JPG, PNG, etc.)",
+          title: "Invalid file type",
+          description: "Please upload an image file (JPG, PNG, etc.)",
           variant: "destructive",
         });
         return;
       }
       if (file.size > 10 * 1024 * 1024) {
         toast({
-          title: "Fichier trop volumineux",
-          description: "Veuillez importer une image de moins de 10 Mo",
+          title: "File too large",
+          description: "Please upload an image smaller than 10MB",
           variant: "destructive",
         });
         return;
@@ -124,9 +124,9 @@ export function BatchExamUpload({
     );
     if (incompleteStudents.length > 0) {
       toast({
-        title: "Erreur",
+        title: "Error",
         description:
-          "Veuillez remplir le nom de l'élève et télécharger au moins une image pour chaque élève",
+          "Please fill in the student name and upload at least one image for each student",
         variant: "destructive",
       });
       return;
@@ -151,11 +151,11 @@ export function BatchExamUpload({
         <div className="mx-auto max-w-4xl">
           <div className="mb-12">
             <h1 className="font-display text-4xl font-bold mb-4">
-              Télécharger les examens des élèves
+              Upload student exams
             </h1>
             <p className="text-lg text-muted-foreground">
-              Téléchargez les examens de {questions.length} question(s) pour chaque élève.
-              Vous pouvez télécharger plusieurs images par élève et jusqu'à 10 élèves.
+              Upload exams for {questions.length} question(s) for each student.
+              You can upload multiple images per student and up to 10 students.
             </p>
           </div>
 
@@ -164,7 +164,7 @@ export function BatchExamUpload({
               <Card key={student.id} className="p-6">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-semibold">Élève {index + 1}</h3>
+                    <h3 className="font-semibold">Student {index + 1}</h3>
                     {students.length > 1 && (
                       <Button
                         variant="ghost"
@@ -178,10 +178,10 @@ export function BatchExamUpload({
 
                   <div>
                     <Label className="text-sm font-medium mb-2 block">
-                      Nom de l'élève
+                      Student name
                     </Label>
                     <Input
-                      placeholder="Ex: Jean Dupont"
+                      placeholder="e.g., John Smith"
                       value={student.studentName}
                       onChange={(e) => handleStudentNameChange(student.id, e.target.value)}
                     />
@@ -189,7 +189,7 @@ export function BatchExamUpload({
 
                   <div>
                     <Label className="text-sm font-medium mb-3 block">
-                      Images de l'examen ({student.images.length})
+                      Exam images ({student.images.length})
                     </Label>
 
                     {student.images.length === 0 ? (
@@ -199,10 +199,10 @@ export function BatchExamUpload({
                       >
                         <Image className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
                         <p className="text-sm font-medium mb-1">
-                          Cliquez pour ajouter une image
+                          Click to add image
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          JPG, PNG (max 10 Mo)
+                          JPG, PNG (max 10MB)
                         </p>
                         <input
                           ref={(el) => {
@@ -243,7 +243,7 @@ export function BatchExamUpload({
                           onClick={() => fileInputRefs.current[`${student.id}-add`]?.click()}
                         >
                           <Plus className="h-4 w-4" />
-                          Ajouter une autre image
+                          Add another image
                         </Button>
                         <input
                           ref={(el) => {
@@ -268,15 +268,15 @@ export function BatchExamUpload({
               disabled={students.length >= 10}
             >
               <Plus className="h-4 w-4" />
-              Ajouter un élève
+              Add student
             </Button>
 
             <div className="flex gap-3 pt-6">
               <Button variant="outline" onClick={onBack} className="flex-1">
-                Retour
+                Back
               </Button>
               <Button onClick={handleSubmit} className="flex-1">
-                Continuer vers la correction
+                Continue to grading
               </Button>
             </div>
           </div>

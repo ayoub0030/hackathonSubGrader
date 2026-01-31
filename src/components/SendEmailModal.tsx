@@ -49,8 +49,8 @@ export function SendEmailModal({
     const incompleteEmails = studentEmails.filter((se) => !se.email.trim());
     if (incompleteEmails.length > 0) {
       toast({
-        title: "Erreur",
-        description: "Veuillez entrer une adresse email pour chaque élève",
+        title: "Error",
+        description: "Please enter an email address for each student",
         variant: "destructive",
       });
       return;
@@ -90,14 +90,14 @@ export function SendEmailModal({
 
     if (errorCount === 0) {
       toast({
-        title: "Succès",
-        description: `${successCount} email(s) envoyé(s) avec succès`,
+        title: "Success",
+        description: `${successCount} email(s) sent successfully`,
       });
       onClose();
     } else {
       toast({
-        title: "Partiellement complété",
-        description: `${successCount} email(s) envoyé(s), ${errorCount} erreur(s)`,
+        title: "Partially completed",
+        description: `${successCount} email(s) sent, ${errorCount} error(s)`,
         variant: "destructive",
       });
     }
@@ -111,7 +111,7 @@ export function SendEmailModal({
         <div className="sticky top-0 bg-background border-b border-border p-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Mail className="h-5 w-5" />
-            <h2 className="text-xl font-semibold">Envoyer les rapports par email</h2>
+            <h2 className="text-xl font-semibold">Send reports by email</h2>
           </div>
           <button
             onClick={onClose}
@@ -123,7 +123,7 @@ export function SendEmailModal({
 
         <div className="p-6 space-y-6">
           <p className="text-sm text-muted-foreground">
-            Entrez l'adresse email de chaque élève pour recevoir son rapport de correction.
+            Enter the email address for each student to receive their grading report.
           </p>
 
           <div className="space-y-4 max-h-[calc(90vh-300px)] overflow-y-auto">
@@ -134,7 +134,7 @@ export function SendEmailModal({
                 </Label>
                 <Input
                   type="email"
-                  placeholder="exemple@email.com"
+                  placeholder="example@email.com"
                   value={studentEmail.email}
                   onChange={(e) =>
                     handleEmailChange(studentEmail.examId, e.target.value)
@@ -148,7 +148,7 @@ export function SendEmailModal({
           {isSending && sentCount > 0 && (
             <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
               <p className="text-sm text-blue-700 dark:text-blue-400">
-                Envoi en cours... {sentCount}/{studentEmails.length}
+                Sending in progress... {sentCount}/{studentEmails.length}
               </p>
             </div>
           )}
@@ -160,7 +160,7 @@ export function SendEmailModal({
               disabled={isSending}
               className="flex-1"
             >
-              Annuler
+              Cancel
             </Button>
             <Button
               onClick={handleSendEmails}
@@ -170,12 +170,12 @@ export function SendEmailModal({
               {isSending ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Envoi en cours...
+                  Sending in progress...
                 </>
               ) : (
                 <>
                   <Mail className="h-4 w-4" />
-                  Envoyer les emails
+                  Send emails
                 </>
               )}
             </Button>

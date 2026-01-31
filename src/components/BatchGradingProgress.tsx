@@ -28,10 +28,10 @@ export function BatchGradingProgress({
         <div className="mx-auto max-w-2xl">
           <div className="mb-12">
             <h1 className="font-display text-4xl font-bold mb-4">
-              Correction en cours
+              Grading in progress
             </h1>
             <p className="text-lg text-muted-foreground">
-              {examCount} examen(s) à corriger
+              {examCount} exam(s) to grade
             </p>
           </div>
 
@@ -45,19 +45,19 @@ export function BatchGradingProgress({
                     </div>
                   </div>
                   <div>
-                    <h2 className="text-2xl font-bold mb-2">Prêt à corriger</h2>
+                    <h2 className="text-2xl font-bold mb-2">Ready to grade</h2>
                     <p className="text-muted-foreground mb-6">
-                      Cliquez sur le bouton ci-dessous pour lancer la correction de {examCount} examen(s).
-                      Cette opération peut prendre quelques minutes.
+                      Click the button below to start grading {examCount} exam(s).
+                      This operation may take a few minutes.
                     </p>
                   </div>
                   <div className="flex gap-3">
                     <Button variant="outline" onClick={onBack} className="flex-1">
-                      Retour
+                      Back
                     </Button>
                     <Button onClick={onStartGrading} className="flex-1 gap-2">
                       <Loader2 className="h-4 w-4" />
-                      Lancer la correction
+                      Start grading
                     </Button>
                   </div>
                 </div>
@@ -65,14 +65,14 @@ export function BatchGradingProgress({
                 <div className="space-y-6">
                   <div>
                     <div className="flex items-center justify-between mb-3">
-                      <h3 className="font-semibold">Progression</h3>
+                      <h3 className="font-semibold">Progress</h3>
                       <span className="text-sm font-medium text-muted-foreground">
                         {progress.completed} / {progress.total}
                       </span>
                     </div>
                     <Progress value={percentage} className="h-3" />
                     <p className="text-sm text-muted-foreground mt-2">
-                      {Math.round(percentage)}% complété
+                      {Math.round(percentage)}% completed
                     </p>
                   </div>
 
@@ -83,10 +83,10 @@ export function BatchGradingProgress({
                           <CheckCircle2 className="h-5 w-5 text-green-600" />
                           <div>
                             <p className="font-medium text-green-700">
-                              Correction terminée
+                              Grading completed
                             </p>
                             <p className="text-sm text-muted-foreground">
-                              Tous les examens ont été traités avec succès
+                              All exams have been processed successfully
                             </p>
                           </div>
                         </>
@@ -94,9 +94,9 @@ export function BatchGradingProgress({
                         <>
                           <Loader2 className="h-5 w-5 animate-spin text-primary" />
                           <div>
-                            <p className="font-medium">Correction en cours...</p>
+                            <p className="font-medium">Grading in progress...</p>
                             <p className="text-sm text-muted-foreground">
-                              Veuillez patienter
+                              Please wait
                             </p>
                           </div>
                         </>
@@ -110,7 +110,7 @@ export function BatchGradingProgress({
                         Retour
                       </Button>
                       <Button disabled className="flex-1">
-                        Voir les résultats
+                        View results
                       </Button>
                     </div>
                   )}

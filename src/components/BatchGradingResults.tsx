@@ -26,17 +26,17 @@ export function BatchGradingResults({
 
   const handleExportCSV = () => {
     const headers = [
-      "Nom de l'élève",
-      "Statut",
-      "Score total",
-      "Score max",
-      "Note",
-      "Erreur",
+      "Student name",
+      "Status",
+      "Total score",
+      "Max score",
+      "Grade",
+      "Error",
     ];
 
     const rows = results.map((result) => [
       result.studentName,
-      result.status === "success" ? "Succès" : "Erreur",
+      result.status === "success" ? "Success" : "Error",
       result.result?.overall_assessment.total_score ?? "-",
       result.result?.overall_assessment.total_max_score ?? "-",
       result.result?.overall_assessment.letter_grade ?? "-",
@@ -53,7 +53,7 @@ export function BatchGradingResults({
     const url = URL.createObjectURL(blob);
 
     link.setAttribute("href", url);
-    link.setAttribute("download", `resultats-correction-${Date.now()}.csv`);
+    link.setAttribute("download", `grading-results-${Date.now()}.csv`);
     link.style.visibility = "hidden";
 
     document.body.appendChild(link);
@@ -67,11 +67,11 @@ export function BatchGradingResults({
         <div className="mx-auto max-w-6xl">
           <div className="mb-12">
             <h1 className="font-display text-4xl font-bold mb-4">
-              Résultats de la correction
+              Grading results
             </h1>
             <p className="text-lg text-muted-foreground">
-              {successCount} examen(s) corrigé(s) avec succès
-              {errorCount > 0 && ` • ${errorCount} erreur(s)`}
+              {successCount} exam(s) graded successfully
+              {errorCount > 0 && ` • ${errorCount} error(s)`}
             </p>
           </div>
 
@@ -95,7 +95,7 @@ export function BatchGradingResults({
                   <CheckCircle2 className="h-6 w-6 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Succès</p>
+                  <p className="text-sm text-muted-foreground">Success</p>
                   <p className="text-2xl font-bold">{successCount}</p>
                 </div>
               </div>
@@ -107,7 +107,7 @@ export function BatchGradingResults({
                   <AlertCircle className="h-6 w-6 text-red-600 dark:text-red-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Erreurs</p>
+                  <p className="text-sm text-muted-foreground">Errors</p>
                   <p className="text-2xl font-bold">{errorCount}</p>
                 </div>
               </div>
@@ -152,12 +152,12 @@ export function BatchGradingResults({
                       {result.status === "success" ? (
                         <div className="flex items-center gap-2">
                           <CheckCircle2 className="h-5 w-5 text-green-600" />
-                          <span className="text-sm font-medium">Succès</span>
+                          <span className="text-sm font-medium">Success</span>
                         </div>
                       ) : (
                         <div className="flex items-center gap-2">
                           <AlertCircle className="h-5 w-5 text-red-600" />
-                          <span className="text-sm font-medium">Erreur</span>
+                          <span className="text-sm font-medium">Error</span>
                         </div>
                       )}
                     </div>
@@ -224,7 +224,7 @@ export function BatchGradingResults({
                                   {item.student_answer && (
                                     <div className="rounded-lg bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 p-4">
                                       <p className="text-xs font-bold text-blue-700 dark:text-blue-400 uppercase tracking-wide mb-2">
-                                        Réponse de l'élève
+                                        Student answer
                                       </p>
                                       <p className="text-sm text-foreground whitespace-pre-wrap">
                                         {item.student_answer}
@@ -235,7 +235,7 @@ export function BatchGradingResults({
                                   {/* Teacher Justification */}
                                   <div className="rounded-lg bg-gray-50 dark:bg-gray-950/20 border border-gray-200 dark:border-gray-800 p-4">
                                     <p className="text-xs font-bold text-gray-700 dark:text-gray-400 uppercase tracking-wide mb-2">
-                                      Justification (Enseignant)
+                                      Justification (Teacher)
                                     </p>
                                     <p className="text-sm text-foreground whitespace-pre-wrap">
                                       {item.justification}
@@ -245,7 +245,7 @@ export function BatchGradingResults({
                                   {/* Feedback for Student */}
                                   <div className="rounded-lg bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 p-4">
                                     <p className="text-xs font-bold text-green-700 dark:text-green-400 uppercase tracking-wide mb-2">
-                                      Retour pour l'élève
+                                      Feedback for student
                                     </p>
                                     <p className="text-sm text-foreground whitespace-pre-wrap">
                                       {item.student_comment}
@@ -259,7 +259,7 @@ export function BatchGradingResults({
 
                         {/* Summary */}
                         <div className="border-t border-border pt-6">
-                          <h4 className="font-semibold mb-3">Résumé</h4>
+                          <h4 className="font-semibold mb-3">Summary</h4>
                           <p className="text-sm text-muted-foreground mb-4">
                             {result.result.feedback.summary_note}
                           </p>
@@ -267,7 +267,7 @@ export function BatchGradingResults({
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                               <h5 className="font-medium mb-2 text-green-700 dark:text-green-400">
-                                Points forts
+                                Strengths
                               </h5>
                               <ul className="space-y-1">
                                 {result.result.feedback.strengths.map(
@@ -285,7 +285,7 @@ export function BatchGradingResults({
 
                             <div>
                               <h5 className="font-medium mb-2 text-amber-700 dark:text-amber-400">
-                                À améliorer
+                                Areas to improve
                               </h5>
                               <ul className="space-y-1">
                                 {result.result.feedback.areas_for_improvement.map(
@@ -307,7 +307,7 @@ export function BatchGradingResults({
                       <div className="text-center py-6">
                         <AlertCircle className="h-8 w-8 text-red-600 mx-auto mb-2" />
                         <p className="font-medium text-red-700 dark:text-red-400">
-                          Erreur lors de la correction
+                          Grading error
                         </p>
                         <p className="text-sm text-muted-foreground mt-1">
                           {result.error}
@@ -328,7 +328,7 @@ export function BatchGradingResults({
               onClick={handleExportCSV}
             >
               <Download className="h-4 w-4" />
-              Exporter en CSV
+              Export as CSV
             </Button>
             <Button
               variant="outline"
@@ -336,11 +336,11 @@ export function BatchGradingResults({
               onClick={() => setIsEmailModalOpen(true)}
             >
               <Mail className="h-4 w-4" />
-              Envoyer par email
+              Send by email
             </Button>
             <Button className="flex-1 gap-2 min-w-[150px]" onClick={onStartOver}>
               <RotateCcw className="h-4 w-4" />
-              Nouvelle correction
+              New grading
             </Button>
           </div>
         </div>

@@ -82,10 +82,10 @@ export function GradingResults({ result, onGradeAnother }: GradingResultsProps) 
                 </div>
                 <div>
                   <h2 className="font-display text-2xl font-bold">
-                    {result.meta.student_name || "Élève anonyme"}
+                    {result.meta.student_name || "Anonymous student"}
                   </h2>
                   <p className="text-sm text-muted-foreground">
-                    {result.meta.grade_level} • {result.meta.word_count} mots
+                    {result.meta.grade_level} • {result.meta.word_count} words
                   </p>
                 </div>
               </div>
@@ -96,7 +96,7 @@ export function GradingResults({ result, onGradeAnother }: GradingResultsProps) 
                   <div className={`font-display text-5xl font-bold ${getGradeColor(result.overall_assessment.letter_grade)}`}>
                     {result.overall_assessment.letter_grade}
                   </div>
-                  <p className="text-sm text-muted-foreground mt-1">Note (lettre)</p>
+                  <p className="text-sm text-muted-foreground mt-1">Grade (letter)</p>
                 </div>
                 <div className="h-16 w-px bg-border" />
                 <div className="text-center">
@@ -115,19 +115,19 @@ export function GradingResults({ result, onGradeAnother }: GradingResultsProps) 
                   {result.flags.is_off_topic && (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-destructive/10 text-destructive text-sm">
                       <AlertCircle className="h-3.5 w-3.5" />
-                      Hors sujet
+                      Off topic
                     </span>
                   )}
                   {result.flags.suspected_plagiarism && (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-warning/10 text-warning text-sm">
                       <AlertCircle className="h-3.5 w-3.5" />
-                      Plagiat possible
+                      Possible plagiarism
                     </span>
                   )}
                   {result.flags.ai_generated_suspicion !== "Low" && (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-warning/10 text-warning text-sm">
                       <AlertCircle className="h-3.5 w-3.5" />
-                      Généré par IA ({result.flags.ai_generated_suspicion})
+                      AI generated ({result.flags.ai_generated_suspicion})
                     </span>
                   )}
                 </div>
@@ -141,7 +141,7 @@ export function GradingResults({ result, onGradeAnother }: GradingResultsProps) 
             <div className="lg:col-span-3 space-y-4">
               <h3 className="font-display text-xl font-semibold flex items-center gap-2">
                 <FileText className="h-5 w-5 text-primary" />
-                Détail de la correction
+                Grading details
               </h3>
               
               {result.grading_breakdown.map((item, index) => (
@@ -197,20 +197,20 @@ export function GradingResults({ result, onGradeAnother }: GradingResultsProps) 
                       {item.student_answer && (
                         <div className="p-3 rounded-lg bg-blue-50 border border-blue-200 dark:bg-blue-950/20 dark:border-blue-800">
                           <p className="text-xs font-medium text-blue-700 dark:text-blue-400 uppercase tracking-wide mb-1">
-                            Réponse de l'élève
+                            Student answer
                           </p>
                           <p className="text-sm text-foreground whitespace-pre-wrap">{item.student_answer}</p>
                         </div>
                       )}
                       <div className="p-3 rounded-lg bg-secondary/50">
                         <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">
-                          Justification (enseignant)
+                          Justification (teacher)
                         </p>
                         <p className="text-sm">{item.justification}</p>
                       </div>
                       <div className="p-3 rounded-lg bg-primary/5 border border-primary/10">
                         <p className="text-xs font-medium text-primary uppercase tracking-wide mb-1">
-                          Retour pour l'élève
+                          Feedback for student
                         </p>
                         <p className="text-sm">{item.student_comment}</p>
                       </div>
@@ -226,7 +226,7 @@ export function GradingResults({ result, onGradeAnother }: GradingResultsProps) 
               <div className="glass-card p-5 animate-slide-up" style={{ animationDelay: '0.2s', opacity: 0 }}>
                 <h3 className="font-display text-lg font-semibold mb-3 flex items-center gap-2">
                   <Lightbulb className="h-5 w-5 text-accent" />
-                  Résumé
+                  Summary
                 </h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   {result.feedback.summary_note}
@@ -237,7 +237,7 @@ export function GradingResults({ result, onGradeAnother }: GradingResultsProps) 
               <div className="glass-card p-5 animate-slide-up" style={{ animationDelay: '0.3s', opacity: 0 }}>
                 <h3 className="font-display text-lg font-semibold mb-3 flex items-center gap-2">
                   <CheckCircle2 className="h-5 w-5 text-success" />
-                  Points forts
+                  Strengths
                 </h3>
                 <ul className="space-y-2">
                   {result.feedback.strengths.map((strength, i) => (
@@ -253,7 +253,7 @@ export function GradingResults({ result, onGradeAnother }: GradingResultsProps) 
               <div className="glass-card p-5 animate-slide-up" style={{ animationDelay: '0.4s', opacity: 0 }}>
                 <h3 className="font-display text-lg font-semibold mb-3 flex items-center gap-2">
                   <TrendingUp className="h-5 w-5 text-primary" />
-                  Axes d'amélioration
+                  Areas for improvement
                 </h3>
                 <ul className="space-y-2">
                   {result.feedback.areas_for_improvement.map((area, i) => (
@@ -272,7 +272,7 @@ export function GradingResults({ result, onGradeAnother }: GradingResultsProps) 
                 className="w-full"
                 onClick={onGradeAnother}
               >
-                Corriger une autre dissertation
+                Grade another essay
               </Button>
             </div>
           </div>
