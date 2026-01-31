@@ -8,6 +8,7 @@ import { Header } from "@/components/Header";
 import { HeroSection } from "@/components/HeroSection";
 import { QuestionExtractor } from "@/components/QuestionExtractor";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
+import { FloatingActionButton } from "@/components/floating-action-button";
 import { toast } from "@/hooks/use-toast";
 import { extractQuestionsFromExam, ExtractedQuestion } from "@/lib/extract-questions";
 import { gradeWithQuestionScores } from "@/lib/grade-with-scores";
@@ -172,6 +173,7 @@ const Index = () => {
         </>
       )}
 
+      <FloatingActionButton />
       <Footer />
     </div>
   );

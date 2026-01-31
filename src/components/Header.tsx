@@ -2,6 +2,7 @@ import { GraduationCap, FileText, Sparkles, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { NotificationCenter } from "@/components/notification-center";
+import { KeyboardShortcuts, defaultShortcuts } from "@/components/keyboard-shortcuts";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -39,6 +40,7 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-2">
+            <KeyboardShortcuts shortcuts={defaultShortcuts} />
             <NotificationCenter />
             <ThemeToggle />
             {location.pathname === "/" ? (
