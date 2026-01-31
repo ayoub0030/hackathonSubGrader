@@ -43,6 +43,12 @@ export function Header() {
             <a href="/settings" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Settings
             </a>
+            <a href="/help" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Help
+            </a>
+            <a href="/feedback" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Feedback
+            </a>
           </nav>
 
           <div className="flex items-center gap-2">
