@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { EssaySubmissionSkeleton } from "@/components/loading-skeletons";
 
 interface EssaySubmissionProps {
   onSubmit: (data: {
@@ -135,28 +136,32 @@ export function EssaySubmission({ onSubmit, isLoading }: EssaySubmissionProps) {
     <section id="grading-form" className="py-16 md:py-24">
       <div className="container">
         <div className="mx-auto max-w-4xl">
-          {/* Section Header */}
-          <div className="mb-10 text-center">
-            <h2 className="mb-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
-              Submit an essay for grading
-            </h2>
-            <p className="text-muted-foreground">
-              Paste or upload an essay, select grade level and rubric type, and get instant feedback.
-            </p>
-            {lastSaved && (
-              <div className="mt-4 flex items-center justify-center gap-2 text-xs text-muted-foreground">
-                <Save className="h-3 w-3" />
-                <span>Draft saved at {lastSaved.toLocaleTimeString()}</span>
-                <button
-                  type="button"
-                  onClick={clearDraft}
-                  className="text-destructive hover:underline"
-                >
-                  Clear draft
-                </button>
+          {isLoading ? (
+            <EssaySubmissionSkeleton />
+          ) : (
+            <>
+              {/* Section Header */}
+              <div className="mb-10 text-center">
+                <h2 className="mb-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
+                  Submit an essay for grading
+                </h2>
+                <p className="text-muted-foreground">
+                  Paste or upload an essay, select grade level and rubric type, and get instant feedback.
+                </p>
+                {lastSaved && (
+                  <div className="mt-4 flex items-center justify-center gap-2 text-xs text-muted-foreground">
+                    <Save className="h-3 w-3" />
+                    <span>Draft saved at {lastSaved.toLocaleTimeString()}</span>
+                    <button
+                      type="button"
+                      onClick={clearDraft}
+                      className="text-destructive hover:underline"
+                    >
+                      Clear draft
+                    </button>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
 
           {/* Form Card */}
           <div className="glass-card p-6 md:p-8">
@@ -309,6 +314,8 @@ export function EssaySubmission({ onSubmit, isLoading }: EssaySubmissionProps) {
               </div>
             </form>
           </div>
+            </>
+          )}
         </div>
       </div>
     </section>

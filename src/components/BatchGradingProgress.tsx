@@ -2,6 +2,7 @@ import { Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
+import { BatchGradingProgressTracker } from "@/components/progress-tracker";
 import { ExtractedQuestion } from "@/lib/extract-questions";
 
 interface BatchGradingProgressProps {
@@ -37,6 +38,15 @@ export function BatchGradingProgress({
 
           <Card className="p-8">
             <div className="space-y-8">
+              {/* Progress Tracker */}
+              {isGrading && (
+                <BatchGradingProgressTracker
+                  currentStep={progress.completed > 0 ? 1 : 0}
+                  totalSteps={4}
+                  currentFileName={`Exam ${progress.completed} of ${progress.total}`}
+                />
+              )}
+
               {!isGrading && progress.total === 0 ? (
                 <div className="text-center space-y-6">
                   <div className="flex justify-center">
