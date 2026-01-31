@@ -1,0 +1,356 @@
+import { useState } from "react";
+import { Download, RotateCcw, ChevronDown, ChevronUp, CheckCircle2, AlertCircle, User, Mail } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { BatchGradingResult } from "@/lib/grade-with-scores";
+import { ExtractedQuestion } from "@/lib/extract-questions";
+import { SendEmailModal } from "@/components/SendEmailModal";
+
+interface BatchGradingResultsProps {
+  results: BatchGradingResult[];
+  questions: ExtractedQuestion[];
+  onStartOver: () => void;
+}
+
+export function BatchGradingResults({
+  results,
+  questions,
+  onStartOver,
+}: BatchGradingResultsProps) {
+  const [expandedStudentId, setExpandedStudentId] = useState<string | null>(null);
+  const [expandedQuestionId, setExpandedQuestionId] = useState<string | null>(null);
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+
+  const successCount = results.filter((r) => r.status === "success").length;
+  const errorCount = results.filter((r) => r.status === "error").length;
+
+  const handleExportCSV = () => {
+    const headers = [
+      "Nom de l'élève",
+      "Statut",
+      "Score total",
+      "Score max",
+      "Note",
+      "Erreur",
+    ];
+
+    const rows = results.map((result) => [
+      result.studentName,
+      result.status === "success" ? "Succès" : "Erreur",
+      result.result?.overall_assessment.total_score ?? "-",
+      result.result?.overall_assessment.total_max_score ?? "-",
+      result.result?.overall_assessment.letter_grade ?? "-",
+      result.error ?? "",
+    ]);
+
+    const csvContent = [
+      headers.join(","),
+      ...rows.map((row) => row.map((cell) => `"${cell}"`).join(",")),
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+
+    link.setAttribute("href", url);
+    link.setAttribute("download", `resultats-correction-${Date.now()}.csv`);
+    link.style.visibility = "hidden";
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  return (
+    <section className="py-16 md:py-24">
+      <div className="container">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-12">
+            <h1 className="font-display text-4xl font-bold mb-4">
+              Résultats de la correction
+            </h1>
+            <p className="text-lg text-muted-foreground">
+              {successCount} examen(s) corrigé(s) avec succès
+              {errorCount > 0 && ` • ${errorCount} erreur(s)`}
+            </p>
+          </div>
+
+          {/* Summary Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <Card className="p-6">
+              <div className="flex items-center gap-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30">
+                  <User className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Total</p>
+                  <p className="text-2xl font-bold">{results.length}</p>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-6">
+              <div className="flex items-center gap-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100 dark:bg-green-900/30">
+                  <CheckCircle2 className="h-6 w-6 text-green-600 dark:text-green-400" />
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Succès</p>
+                  <p className="text-2xl font-bold">{successCount}</p>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-6">
+              <div className="flex items-center gap-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-red-100 dark:bg-red-900/30">
+                  <AlertCircle className="h-6 w-6 text-red-600 dark:text-red-400" />
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Erreurs</p>
+                  <p className="text-2xl font-bold">{errorCount}</p>
+                </div>
+              </div>
+            </Card>
+          </div>
+
+          {/* Results by Student */}
+          <div className="space-y-6 mb-8">
+            {results.map((result) => (
+              <Card key={result.examId} className="overflow-hidden">
+                <div
+                  className="p-6 cursor-pointer hover:bg-muted/50 transition-colors"
+                  onClick={() =>
+                    setExpandedStudentId(
+                      expandedStudentId === result.examId ? null : result.examId
+                    )
+                  }
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <button className="p-1">
+                        {expandedStudentId === result.examId ? (
+                          <ChevronUp className="h-5 w-5" />
+                        ) : (
+                          <ChevronDown className="h-5 w-5" />
+                        )}
+                      </button>
+                      <div>
+                        <h3 className="font-semibold text-lg">
+                          {result.studentName}
+                        </h3>
+                        {result.status === "success" && result.result && (
+                          <p className="text-sm text-muted-foreground">
+                            {result.result.overall_assessment.total_score}/
+                            {result.result.overall_assessment.total_max_score} •{" "}
+                            {result.result.overall_assessment.letter_grade}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <div>
+                      {result.status === "success" ? (
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 className="h-5 w-5 text-green-600" />
+                          <span className="text-sm font-medium">Succès</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <AlertCircle className="h-5 w-5 text-red-600" />
+                          <span className="text-sm font-medium">Erreur</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {expandedStudentId === result.examId && (
+                  <div className="border-t border-border bg-muted/30 p-6">
+                    {result.status === "success" && result.result ? (
+                      <div className="space-y-6">
+                        {/* Questions Details */}
+                        <div className="space-y-4">
+                          {result.result.grading_breakdown.map((item, idx) => (
+                            <Card key={idx} className="overflow-hidden border">
+                              <div
+                                className="p-4 bg-gradient-to-r from-primary/5 to-primary/10 cursor-pointer hover:from-primary/10 hover:to-primary/15 transition-colors flex items-center justify-between"
+                                onClick={() =>
+                                  setExpandedQuestionId(
+                                    expandedQuestionId === `${result.examId}-${idx}`
+                                      ? null
+                                      : `${result.examId}-${idx}`
+                                  )
+                                }
+                              >
+                                <div className="flex items-center gap-3">
+                                  <button className="p-1">
+                                    {expandedQuestionId === `${result.examId}-${idx}` ? (
+                                      <ChevronUp className="h-4 w-4" />
+                                    ) : (
+                                      <ChevronDown className="h-4 w-4" />
+                                    )}
+                                  </button>
+                                  <div>
+                                    <h4 className="font-semibold">
+                                      {item.category}
+                                    </h4>
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                  <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-primary/20 text-primary">
+                                    {item.proficiency_level}
+                                  </span>
+                                  <span className="font-bold text-lg">
+                                    {item.score}/{item.max_score}
+                                  </span>
+                                </div>
+                              </div>
+
+                              {expandedQuestionId === `${result.examId}-${idx}` && (
+                                <div className="p-6 space-y-4">
+                                  {/* Question */}
+                                  {item.question_text && (
+                                    <div className="rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 p-4">
+                                      <p className="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wide mb-2">
+                                        Question
+                                      </p>
+                                      <p className="text-sm text-foreground whitespace-pre-wrap">
+                                        {item.question_text}
+                                      </p>
+                                    </div>
+                                  )}
+
+                                  {/* Student Response */}
+                                  {item.student_answer && (
+                                    <div className="rounded-lg bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 p-4">
+                                      <p className="text-xs font-bold text-blue-700 dark:text-blue-400 uppercase tracking-wide mb-2">
+                                        Réponse de l'élève
+                                      </p>
+                                      <p className="text-sm text-foreground whitespace-pre-wrap">
+                                        {item.student_answer}
+                                      </p>
+                                    </div>
+                                  )}
+
+                                  {/* Teacher Justification */}
+                                  <div className="rounded-lg bg-gray-50 dark:bg-gray-950/20 border border-gray-200 dark:border-gray-800 p-4">
+                                    <p className="text-xs font-bold text-gray-700 dark:text-gray-400 uppercase tracking-wide mb-2">
+                                      Justification (Enseignant)
+                                    </p>
+                                    <p className="text-sm text-foreground whitespace-pre-wrap">
+                                      {item.justification}
+                                    </p>
+                                  </div>
+
+                                  {/* Feedback for Student */}
+                                  <div className="rounded-lg bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 p-4">
+                                    <p className="text-xs font-bold text-green-700 dark:text-green-400 uppercase tracking-wide mb-2">
+                                      Retour pour l'élève
+                                    </p>
+                                    <p className="text-sm text-foreground whitespace-pre-wrap">
+                                      {item.student_comment}
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
+                            </Card>
+                          ))}
+                        </div>
+
+                        {/* Summary */}
+                        <div className="border-t border-border pt-6">
+                          <h4 className="font-semibold mb-3">Résumé</h4>
+                          <p className="text-sm text-muted-foreground mb-4">
+                            {result.result.feedback.summary_note}
+                          </p>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                              <h5 className="font-medium mb-2 text-green-700 dark:text-green-400">
+                                Points forts
+                              </h5>
+                              <ul className="space-y-1">
+                                {result.result.feedback.strengths.map(
+                                  (strength, idx) => (
+                                    <li
+                                      key={idx}
+                                      className="text-sm text-muted-foreground"
+                                    >
+                                      • {strength}
+                                    </li>
+                                  )
+                                )}
+                              </ul>
+                            </div>
+
+                            <div>
+                              <h5 className="font-medium mb-2 text-amber-700 dark:text-amber-400">
+                                À améliorer
+                              </h5>
+                              <ul className="space-y-1">
+                                {result.result.feedback.areas_for_improvement.map(
+                                  (area, idx) => (
+                                    <li
+                                      key={idx}
+                                      className="text-sm text-muted-foreground"
+                                    >
+                                      • {area}
+                                    </li>
+                                  )
+                                )}
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-center py-6">
+                        <AlertCircle className="h-8 w-8 text-red-600 mx-auto mb-2" />
+                        <p className="font-medium text-red-700 dark:text-red-400">
+                          Erreur lors de la correction
+                        </p>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {result.error}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </Card>
+            ))}
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-3 flex-wrap">
+            <Button
+              variant="outline"
+              className="flex-1 gap-2 min-w-[150px]"
+              onClick={handleExportCSV}
+            >
+              <Download className="h-4 w-4" />
+              Exporter en CSV
+            </Button>
+            <Button
+              variant="outline"
+              className="flex-1 gap-2 min-w-[150px]"
+              onClick={() => setIsEmailModalOpen(true)}
+            >
+              <Mail className="h-4 w-4" />
+              Envoyer par email
+            </Button>
+            <Button className="flex-1 gap-2 min-w-[150px]" onClick={onStartOver}>
+              <RotateCcw className="h-4 w-4" />
+              Nouvelle correction
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <SendEmailModal
+        results={results}
+        isOpen={isEmailModalOpen}
+        onClose={() => setIsEmailModalOpen(false)}
+      />
+    </section>
+  );
+}
