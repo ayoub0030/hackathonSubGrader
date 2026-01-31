@@ -16,6 +16,7 @@ import Collaborative from "./pages/Collaborative";
 import PWA from "./pages/PWA";
 import API from "./pages/API";
 import AdvancedAnalytics from "./pages/AdvancedAnalytics";
+import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +41,7 @@ const App = () => (
               <Route path="/pwa" element={<PWA />} />
               <Route path="/api" element={<API />} />
               <Route path="/advanced-analytics" element={<AdvancedAnalytics />} />
+              <Route path="/admin" element={<Admin />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
