@@ -14,6 +14,7 @@ import Feedback from "./pages/Feedback";
 import Profile from "./pages/Profile";
 import Collaborative from "./pages/Collaborative";
 import PWA from "./pages/PWA";
+import API from "./pages/API";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +37,7 @@ const App = () => (
               <Route path="/profile" element={<Profile />} />
               <Route path="/collaborative" element={<Collaborative />} />
               <Route path="/pwa" element={<PWA />} />
+              <Route path="/api" element={<API />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
