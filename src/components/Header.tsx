@@ -1,6 +1,7 @@
 import { GraduationCap, FileText, Sparkles, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { NotificationCenter } from "@/components/notification-center";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -38,6 +39,7 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-2">
+            <NotificationCenter />
             <ThemeToggle />
             {location.pathname === "/" ? (
               <a href="/class-exam">
@@ -82,6 +84,7 @@ export function Header() {
               </>
             ) : null}
             <div className="flex gap-2 pt-3 border-t border-border">
+              <NotificationCenter />
               <ThemeToggle />
               {location.pathname === "/" ? (
                 <a href="/class-exam" className="flex-1">
