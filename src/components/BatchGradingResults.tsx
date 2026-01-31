@@ -1,7 +1,9 @@
-import { useState } from "react";
-import { Download, RotateCcw, ChevronDown, ChevronUp, CheckCircle2, AlertCircle, User, Mail } from "lucide-react";
+import { useState, useMemo } from "react";
+import { Download, RotateCcw, ChevronDown, ChevronUp, CheckCircle2, AlertCircle, User, Mail, Filter, SortAsc, SortDesc } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { BatchGradingResult } from "@/lib/grade-with-scores";
 import { ExtractedQuestion } from "@/lib/extract-questions";
 import { SendEmailModal } from "@/components/SendEmailModal";
@@ -20,9 +22,69 @@ export function BatchGradingResults({
   const [expandedStudentId, setExpandedStudentId] = useState<string | null>(null);
   const [expandedQuestionId, setExpandedQuestionId] = useState<string | null>(null);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [sortBy, setSortBy] = useState<string>("name");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
   const successCount = results.filter((r) => r.status === "success").length;
   const errorCount = results.filter((r) => r.status === "error").length;
+
+  // Filter and sort results
+  const filteredAndSortedResults = useMemo(() => {
+    let filtered = results;
+
+    // Apply search filter
+    if (searchTerm) {
+      filtered = filtered.filter((result) =>
+        result.studentName.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Apply status filter
+    if (statusFilter !== "all") {
+      filtered = filtered.filter((result) => result.status === statusFilter);
+    }
+
+    // Apply sorting
+    const sorted = [...filtered].sort((a, b) => {
+      let comparison = 0;
+
+      switch (sortBy) {
+        case "name":
+          comparison = a.studentName.localeCompare(b.studentName);
+          break;
+        case "score":
+          const scoreA = a.result?.overall_assessment.total_score ?? 0;
+          const scoreB = b.result?.overall_assessment.total_score ?? 0;
+          comparison = scoreA - scoreB;
+          break;
+        case "grade":
+          const gradeA = a.result?.overall_assessment.letter_grade ?? "";
+          const gradeB = b.result?.overall_assessment.letter_grade ?? "";
+          comparison = gradeA.localeCompare(gradeB);
+          break;
+        case "status":
+          comparison = a.status.localeCompare(b.status);
+          break;
+        default:
+          comparison = 0;
+      }
+
+      return sortOrder === "asc" ? comparison : -comparison;
+    });
+
+    return sorted;
+  }, [results, searchTerm, statusFilter, sortBy, sortOrder]);
+
+  const toggleSort = (field: string) => {
+    if (sortBy === field) {
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      setSortBy(field);
+      setSortOrder("asc");
+    }
+  };
 
   const handleExportCSV = () => {
     const headers = [
@@ -75,6 +137,63 @@ export function BatchGradingResults({
             </p>
           </div>
 
+          {/* Filters and Search */}
+          <Card className="p-6 mb-8">
+            <div className="flex items-center gap-2 mb-4">
+              <Filter className="h-4 w-4" />
+              <h3 className="font-semibold">Filters & Search</h3>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="md:col-span-2">
+                <Input
+                  placeholder="Search by student name..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full"
+                />
+              </div>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Filter by status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="success">Success Only</SelectItem>
+                  <SelectItem value="error">Errors Only</SelectItem>
+                </SelectContent>
+              </Select>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => toggleSort("name")}
+                  className="flex-1"
+                >
+                  Name
+                  {sortBy === "name" && (
+                    sortOrder === "asc" ? <SortAsc className="h-4 w-4 ml-1" /> : <SortDesc className="h-4 w-4 ml-1" />
+                  )}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => toggleSort("score")}
+                  className="flex-1"
+                >
+                  Score
+                  {sortBy === "score" && (
+                    sortOrder === "asc" ? <SortAsc className="h-4 w-4 ml-1" /> : <SortDesc className="h-4 w-4 ml-1" />
+                  )}
+                </Button>
+              </div>
+            </div>
+            {filteredAndSortedResults.length !== results.length && (
+              <div className="mt-4 text-sm text-muted-foreground">
+                Showing {filteredAndSortedResults.length} of {results.length} results
+              </div>
+            )}
+          </Card>
+
           {/* Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <Card className="p-6">
@@ -108,61 +227,84 @@ export function BatchGradingResults({
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Errors</p>
+                  </div>
+              </div>
+            </Card>
+
+            <Card className="p-6">
+              <div className="flex items-center gap-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-red-100 dark:bg-red-900/30">
+                  <AlertCircle className="h-6 w-6 text-red-600 dark:text-red-400" />
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Errors</p>
                   <p className="text-2xl font-bold">{errorCount}</p>
                 </div>
               </div>
             </Card>
           </div>
 
-          {/* Results by Student */}
-          <div className="space-y-6 mb-8">
-            {results.map((result) => (
-              <Card key={result.examId} className="overflow-hidden">
-                <div
-                  className="p-6 cursor-pointer hover:bg-muted/50 transition-colors"
-                  onClick={() =>
-                    setExpandedStudentId(
-                      expandedStudentId === result.examId ? null : result.examId
-                    )
-                  }
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <button className="p-1">
-                        {expandedStudentId === result.examId ? (
-                          <ChevronUp className="h-5 w-5" />
-                        ) : (
-                          <ChevronDown className="h-5 w-5" />
-                        )}
-                      </button>
-                      <div>
-                        <h3 className="font-semibold text-lg">
-                          {result.studentName}
-                        </h3>
-                        {result.status === "success" && result.result && (
-                          <p className="text-sm text-muted-foreground">
-                            {result.result.overall_assessment.total_score}/
-                            {result.result.overall_assessment.total_max_score} •{" "}
-                            {result.result.overall_assessment.letter_grade}
-                          </p>
-                        )}
+          {/* Results List */}
+          <div className="space-y-4">
+            {filteredAndSortedResults.length === 0 ? (
+              <Card className="p-12 text-center">
+                <AlertCircle className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                <h3 className="text-lg font-semibold mb-2">No results found</h3>
+                <p className="text-muted-foreground">
+                  {searchTerm || statusFilter !== "all"
+                    ? "Try adjusting your filters or search terms"
+                    : "No grading results available"}
+                </p>
+              </Card>
+            ) : (
+              <div className="space-y-6 mb-8">
+                {filteredAndSortedResults.map((result) => (
+                  <Card key={result.examId} className="overflow-hidden">
+                    <div
+                      className="p-6 cursor-pointer hover:bg-muted/50 transition-colors"
+                      onClick={() =>
+                        setExpandedStudentId(
+                          expandedStudentId === result.examId ? null : result.examId
+                        )
+                      }
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <button className="p-1">
+                            {expandedStudentId === result.examId ? (
+                              <ChevronUp className="h-5 w-5" />
+                            ) : (
+                              <ChevronDown className="h-5 w-5" />
+                            )}
+                          </button>
+                          <div>
+                            <h3 className="font-semibold text-lg">
+                              {result.studentName}
+                            </h3>
+                            {result.status === "success" && result.result && (
+                              <p className="text-sm text-muted-foreground">
+                                {result.result.overall_assessment.total_score}/
+                                {result.result.overall_assessment.total_max_score} •{" "}
+                                {result.result.overall_assessment.letter_grade}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <div>
+                          {result.status === "success" ? (
+                            <div className="flex items-center gap-2">
+                              <CheckCircle2 className="h-5 w-5 text-green-600" />
+                              <span className="text-sm font-medium">Success</span>
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-2">
+                              <AlertCircle className="h-5 w-5 text-red-600" />
+                              <span className="text-sm font-medium">Error</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
-                    <div>
-                      {result.status === "success" ? (
-                        <div className="flex items-center gap-2">
-                          <CheckCircle2 className="h-5 w-5 text-green-600" />
-                          <span className="text-sm font-medium">Success</span>
-                        </div>
-                      ) : (
-                        <div className="flex items-center gap-2">
-                          <AlertCircle className="h-5 w-5 text-red-600" />
-                          <span className="text-sm font-medium">Error</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
 
                 {expandedStudentId === result.examId && (
                   <div className="border-t border-border bg-muted/30 p-6">
@@ -310,19 +452,18 @@ export function BatchGradingResults({
                           Grading error
                         </p>
                         <p className="text-sm text-muted-foreground mt-1">
-                          {result.error}
-                        </p>
                       </div>
                     )}
-                  </div>
-                )}
-              </Card>
-            ))}
-          </div>
+                  </Card>
+                ))}
+              </div>
 
-          {/* Action Buttons */}
-          <div className="flex gap-3 flex-wrap">
-            <Button
+              {/* Summary */}
+              <div className="border-t border-border pt-6">
+                <h4 className="font-semibold mb-3">Summary</h4>
+                <p className="text-sm text-muted-foreground mb-4">
+                  {result.result.feedback.summary_note}
+                </p>
               variant="outline"
               className="flex-1 gap-2 min-w-[150px]"
               onClick={handleExportCSV}
@@ -343,14 +484,15 @@ export function BatchGradingResults({
               New grading
             </Button>
           </div>
+
+          {/* Email Modal */}
+          <SendEmailModal
+            results={filteredAndSortedResults.filter(r => r.status === "success")}
+            isOpen={isEmailModalOpen}
+            onClose={() => setIsEmailModalOpen(false)}
+          />
         </div>
       </div>
-
-      <SendEmailModal
-        results={results}
-        isOpen={isEmailModalOpen}
-        onClose={() => setIsEmailModalOpen(false)}
-      />
     </section>
   );
 }
