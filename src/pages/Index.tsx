@@ -7,6 +7,7 @@ import { GradingResult, GradingResults } from "@/components/GradingResults";
 import { Header } from "@/components/Header";
 import { HeroSection } from "@/components/HeroSection";
 import { QuestionExtractor } from "@/components/QuestionExtractor";
+import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { toast } from "@/hooks/use-toast";
 import { extractQuestionsFromExam, ExtractedQuestion } from "@/lib/extract-questions";
 import { gradeWithQuestionScores } from "@/lib/grade-with-scores";
@@ -166,7 +167,8 @@ const Index = () => {
             <EssaySubmission onSubmit={handleSubmit} isLoading={isLoading} />
           </div>
           <FeaturesSection />
-       
+          <TestimonialsSection />
+          <DemoSection />
         </>
       )}
 
