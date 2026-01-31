@@ -1,10 +1,11 @@
-import { useState, useRef } from "react";
-import { Loader2, Image, X } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Loader2, Image, X, ChevronDown, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface EssaySubmissionProps {
   onSubmit: (data: {
@@ -20,11 +21,57 @@ interface EssaySubmissionProps {
 export function EssaySubmission({ onSubmit, isLoading }: EssaySubmissionProps) {
   const [essay, setEssay] = useState("");
   const [studentName, setStudentName] = useState("");
+  const [gradeLevel, setGradeLevel] = useState("");
+  const [rubricType, setRubricType] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const wordCount = essay.trim() ? essay.trim().split(/\s+/).length : 0;
+  const charCount = essay.length;
+  const minWords = 100;
+  const maxWords = 5000;
+  const wordCountColor = wordCount < minWords ? 'text-amber-600' : wordCount > maxWords ? 'text-red-600' : 'text-green-600';
+
+  // Auto-save functionality
+  useEffect(() => {
+    const saveData = {
+      essay,
+      studentName,
+      gradeLevel,
+      rubricType,
+    };
+    
+    localStorage.setItem('essaySubmissionDraft', JSON.stringify(saveData));
+    setLastSaved(new Date());
+  }, [essay, studentName, gradeLevel, rubricType]);
+
+  // Load saved data on mount
+  useEffect(() => {
+    const savedData = localStorage.getItem('essaySubmissionDraft');
+    if (savedData) {
+      try {
+        const parsed = JSON.parse(savedData);
+        setEssay(parsed.essay || "");
+        setStudentName(parsed.studentName || "");
+        setGradeLevel(parsed.gradeLevel || "");
+        setRubricType(parsed.rubricType || "");
+        setLastSaved(new Date());
+      } catch (error) {
+        console.error('Error loading saved data:', error);
+      }
+    }
+  }, []);
+
+  const clearDraft = () => {
+    localStorage.removeItem('essaySubmissionDraft');
+    setLastSaved(null);
+    toast({
+      title: "Draft cleared",
+      description: "Your saved draft has been cleared",
+    });
+  };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -64,13 +111,22 @@ export function EssaySubmission({ onSubmit, isLoading }: EssaySubmissionProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (essay.trim() || imageFile) {
+    if ((essay.trim() || imageFile) && gradeLevel && rubricType) {
       onSubmit({
         essay,
         studentName,
-        gradeLevel: "Not specified",
-        rubricType: "general",
+        gradeLevel,
+        rubricType,
         imageFile,
+      });
+      // Clear draft after successful submission
+      localStorage.removeItem('essaySubmissionDraft');
+      setLastSaved(null);
+    } else {
+      toast({
+        title: "Missing information",
+        description: "Please select both grade level and rubric type",
+        variant: "destructive",
       });
     }
   };
@@ -85,15 +141,28 @@ export function EssaySubmission({ onSubmit, isLoading }: EssaySubmissionProps) {
               Submit an essay for grading
             </h2>
             <p className="text-muted-foreground">
-              Paste or upload an essay, select a rubric, and get instant feedback.
+              Paste or upload an essay, select grade level and rubric type, and get instant feedback.
             </p>
+            {lastSaved && (
+              <div className="mt-4 flex items-center justify-center gap-2 text-xs text-muted-foreground">
+                <Save className="h-3 w-3" />
+                <span>Draft saved at {lastSaved.toLocaleTimeString()}</span>
+                <button
+                  type="button"
+                  onClick={clearDraft}
+                  className="text-destructive hover:underline"
+                >
+                  Clear draft
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Form Card */}
           <div className="glass-card p-6 md:p-8">
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Student Info Row */}
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-4 sm:grid-cols-3">
                 <div className="space-y-2">
                   <Label htmlFor="studentName">Student name (optional)</Label>
                   <Input
@@ -103,7 +172,37 @@ export function EssaySubmission({ onSubmit, isLoading }: EssaySubmissionProps) {
                     onChange={(e) => setStudentName(e.target.value)}
                   />
                 </div>
-               
+                <div className="space-y-2">
+                  <Label htmlFor="gradeLevel">Grade level *</Label>
+                  <Select value={gradeLevel} onValueChange={setGradeLevel}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select grade level" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="elementary">Elementary (K-5)</SelectItem>
+                      <SelectItem value="middle">Middle School (6-8)</SelectItem>
+                      <SelectItem value="high">High School (9-12)</SelectItem>
+                      <SelectItem value="college">College/University</SelectItem>
+                      <SelectItem value="graduate">Graduate School</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="rubricType">Rubric type *</Label>
+                  <Select value={rubricType} onValueChange={setRubricType}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select rubric type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="argumentative">Argumentative Essay</SelectItem>
+                      <SelectItem value="narrative">Narrative Essay</SelectItem>
+                      <SelectItem value="expository">Expository Essay</SelectItem>
+                      <SelectItem value="research">Research Paper</SelectItem>
+                      <SelectItem value="literary">Literary Analysis</SelectItem>
+                      <SelectItem value="general">General Writing</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
              
@@ -112,9 +211,14 @@ export function EssaySubmission({ onSubmit, isLoading }: EssaySubmissionProps) {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="essay">Essay content {!imageFile && '*'}</Label>
-                  <span className={`text-xs ${wordCount > 0 ? 'text-muted-foreground' : 'text-muted-foreground/50'}`}>
-                    {wordCount} words
-                  </span>
+                  <div className="flex items-center gap-4">
+                    <span className={`text-xs ${wordCount > 0 ? wordCountColor : 'text-muted-foreground/50'}`}>
+                      {wordCount} words
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {charCount} characters
+                    </span>
+                  </div>
                 </div>
                 <Textarea
                   id="essay"
@@ -124,6 +228,20 @@ export function EssaySubmission({ onSubmit, isLoading }: EssaySubmissionProps) {
                   className="min-h-[200px] resize-y text-sm leading-relaxed"
                   required={!imageFile}
                 />
+                {wordCount > 0 && (
+                  <div className="flex items-center justify-between text-xs text-muted-foreground">
+                    <span>Recommended: {minWords}-{maxWords} words</span>
+                    {wordCount < minWords && (
+                      <span className="text-amber-600">Add {minWords - wordCount} more words</span>
+                    )}
+                    {wordCount > maxWords && (
+                      <span className="text-red-600">Remove {wordCount - maxWords} words</span>
+                    )}
+                    {wordCount >= minWords && wordCount <= maxWords && (
+                      <span className="text-green-600">✓ Good length</span>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* Image Upload */}
