@@ -19,6 +19,7 @@ import AdvancedAnalytics from "./pages/AdvancedAnalytics";
 import Admin from "./pages/Admin";
 import Notifications from "./pages/Notifications";
 import Reporting from "./pages/Reporting";
+import Users from "./pages/Users";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -46,6 +47,7 @@ const App = () => (
               <Route path="/admin" element={<Admin />} />
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/reporting" element={<Reporting />} />
+              <Route path="/users" element={<Users />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
